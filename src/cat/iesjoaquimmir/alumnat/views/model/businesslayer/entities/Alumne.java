@@ -41,10 +41,10 @@ public class Alumne extends Entity implements Serializable {
         }
 
         public void setNom(String nom) {
-              if (!nom.matches("^[A-Z-a-z]+$")){
+              /*if (!nom.matches("^[A-Z-a-z]+$")){
                     throw new IllegalArgumentException(
                         String.format("El nom %s no és correcte", nom )); 
-                }
+                }*/
             this.nom = nom;
         }
 
@@ -54,15 +54,15 @@ public class Alumne extends Entity implements Serializable {
 
 
         public void setDni(String dni) {
-             try{
+             /*try{
                     if(!dni.matches("^[0-9]{8}+[A-Z]$")){     
                         throw new StringTooLongException(dni);
                     }
                     this.dni = dni;  
              }catch(StringTooLongException d){
                 d.printStackTrace();
-             }
-            
+             }*/
+            this.dni = dni; 
         }
         
         public String getCognom1() {
@@ -200,8 +200,8 @@ public class Alumne extends Entity implements Serializable {
        //<editor-fold defaultstate="collapsed" desc="Sobreescriptura">
            @Override
             public String toString() {
-            return String.format("Nom: %s - Edat: %d - DNI: %s\n"
-            , getNom(), getEdat(),getDni());
+            return String.format("Identificador: %d - Nom: %s - Edat: %d - DNI: %s\n"
+            , getId(),getNom(), getEdat(),getDni());
             }
          //</editor-fold>
 

@@ -10,7 +10,7 @@ public class PersistenceException extends Exception{
     public String toString(){
         String missatge="";
         StringBuilder sb = new StringBuilder();
-        sb.append("Excepció provocada en accedir a la base de dades geoapp. ");
+        sb.append("Excepció provocada en accedir a la base de dades Institut. ");
         sb.append("Codi Error");
         sb.append(codiError.toString());
         missatge=sb.toString();

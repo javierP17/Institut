@@ -12,9 +12,10 @@ public interface AlumneDAO {
     //crear alumnos
         public abstract void saveAlumne(Alumne alumne) throws PersistenceException;
     //asignar modulos a alumnos
+        //public abstract void assignAM(int idAlumne, int idModul) throws PersistenceException;
     //mostrar alumnos con sus modulos
     //mostrar alumnos
-       //public abstract List<Alumne> getAlumnes();
+       public abstract List<Alumne> getAlumnes() throws PersistenceException;
     //mostrar modulos
-       //public abstract List<Modul> getModuls();
+       public abstract List<Modul> getModuls()throws PersistenceException;
 }
