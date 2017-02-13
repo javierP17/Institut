@@ -12,9 +12,10 @@ public class JDBCUtils {
    public static Alumne getAlumne(ResultSet reader) throws SQLException{
        Alumne alumne = new Alumne(
        reader.getString("nom"),
+       reader.getString("dni"),
        reader.getString("cognom1"),
-       reader.getString("cognom2"),
-       reader.getString("dni"));
+       reader.getString("cognom2")
+       );
        alumne.setId(reader.getInt("id"));
        return alumne;
    }

@@ -8,7 +8,7 @@ import cat.iesjoaquimmir.alumnat.views.model.businesslayer.entities.StringTooLon
 import cat.iesjoaquimmir.alumnat.views.model.businesslayer.entities.LongModuls;
 import java.io.Serializable;
 
-public class Alumne extends Entity implements Serializable {
+public class Alumne extends Entity implements Serializable{
     //<editor-fold defaultstate="collapsed" desc="Estat:atributs">
         private int edat;
         private String nom;
@@ -200,8 +200,8 @@ public class Alumne extends Entity implements Serializable {
        //<editor-fold defaultstate="collapsed" desc="Sobreescriptura">
            @Override
             public String toString() {
-            return String.format("Identificador: %d - Nom: %s - Edat: %d - DNI: %s\n"
-            , getId(),getNom(), getEdat(),getDni());
+            return String.format("Identificador: %d - Nom: %s - Cognom1: %s - Cognom2: %s - DNI: %s\n"
+            , getId(),getNom(),getCognom1(), getCognom2(),getDni());
             }
          //</editor-fold>
 

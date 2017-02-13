@@ -24,7 +24,7 @@ public class AlumnatApplication {
         Scanner inici = new Scanner(System.in);
         do{
             //System.out.println("\nEscull una opció:\n1.Edat-Nom-Dni\n2.dni\n3.Edat-Nom\n4.Dni-Edat\n5.Nom-Dni\n6.Pt8a\n7.FitxersEscriptura\n8.FitxersLectura\n9.EscripturaOutput\n10.LecturaInput\n11.Surt\n");
-            System.out.println("\n1.Afegeix un alumne\n2.Mostra alumnes\n3.Afegeix un módul\n4.Mostra els móduls\n11.Surt\n");
+            System.out.println("\n1.Afegeix un alumne\n2.Mostra alumnes\n3.Afegeix un módul\n4.Mostra els móduls\n5.Assignar un alumne a un mòdul\n6.Mostra els mòduls d'un usuari\n7.Edita un alumne\n11.Surt\n");
             opc = inici.nextInt();
             switch (opc){
                 case 1:
@@ -38,6 +38,12 @@ public class AlumnatApplication {
                     break;
                 case 4:
                     getModul();
+                    break;
+                case 5: saveCursa();
+                    break;
+                case 6: getCursa();
+                    break;
+                case 7: updateAlumne();
                     break;
             } 
           }while(opc!=11);
@@ -79,16 +85,31 @@ public class AlumnatApplication {
          AlumneDAO modulDAO = new AlumneMySQLDAO();
          modulDAO.saveModul(m1);
          }
+        
+        private static void saveCursa() throws PersistenceException {
+            int idAlumne;
+            int idModul;
+            Scanner pregunta = new Scanner(System.in);
+            getAlumne();
+            System.out.printf("\nDigues el id del Alumne que vols assignar a un modul: ");
+            idAlumne = pregunta.nextInt();
+            getModul();
+            System.out.printf("\nDigues el id del Mdul al que vols assignar-li l'alumne anterior: ");
+            idModul = pregunta.nextInt();
+            AlumneDAO alumneDAO = new AlumneMySQLDAO();
+            alumneDAO.saveCursa(idAlumne, idModul);
+            //pregunta.close();
+	}
          private static void getAlumne() throws PersistenceException{
            AlumneDAO alumneDAO = new AlumneMySQLDAO();
            try {
                 List<Alumne> alumnes = alumneDAO.getAlumnes();
-                /*for(Alumne alumne : alumnes){
+                for(Alumne alumne : alumnes){
                   System.out.println(alumne.toString());
-                }*/
-                for(int i=0; i<alumnes.size();i++){
-                   System.out.println(alumnes.get(i));
                 }
+                /*for(int i=0; i<alumnes.size();i++){
+                   System.out.println(alumnes.get(i));
+                }*/
             
             }catch(PersistenceException e){
                  e.printStackTrace();       
@@ -109,4 +130,69 @@ public class AlumnatApplication {
                  e.printStackTrace();       
             }
          }
+         
+         /**
+	 * This method get moduls assignats a un alumne on the database
+	 */
+	private static void getCursa() throws PersistenceException {
+            AlumneDAO modulDAO = new AlumneMySQLDAO();
+            int idAlumne;
+            getAlumne();
+            Scanner pregunta = new Scanner(System.in);
+            System.out.printf("\nDigues el id del Alumne que vols mostrar amb els seus moduls: ");
+            idAlumne = pregunta.nextInt();
+            //pregunta.close();
+            try {
+		List<Modul> modulsAssign = modulDAO.getCursa(idAlumne);
+		for (Modul modul : modulsAssign) {
+                    System.out.println(modul.toString());
+		}
+
+            } catch (PersistenceException e) {
+			e.printStackTrace();
+            }
+	}
+        
+        
+            private static void updateAlumne() throws PersistenceException{
+            Scanner pregunta = new Scanner(System.in);
+            String nom;
+            String c1;
+            String c2;
+            String dni;
+            String resposta;
+            int alumneM;
+            AlumneDAO alumneDAO = new AlumneMySQLDAO();
+            try {
+                List<Alumne> alumnes = alumneDAO.getAlumnes();
+                for(int i=0; i<alumnes.size();i++){
+                   System.out.println(alumnes.get(i));
+                }
+                System.out.printf("\nVols modificar algún color?(y/n): ");
+                resposta = pregunta.next();
+                resposta.toUpperCase();
+                if(resposta.equals("y") || resposta.equals("Y")){
+                  System.out.printf("\nIntrodueix l'id de l'alumne que vols modificar: ");  
+                  alumneM = pregunta.nextInt();
+                  System.out.printf("\nIntrodueix el nom: ");  
+                  nom = pregunta.next();
+                  System.out.printf("\nIntrodueix el primer cognom: ");  
+                  c1 = pregunta.next();
+                  System.out.printf("\nIntrodueix el segon cognom: ");  
+                  c2 = pregunta.next();
+                  /*System.out.printf("\nIntrodueix el dni: ");  
+                  dni = pregunta.next();*/
+                  Alumne alumne=alumnes.get(alumneM - 1);
+                  alumne.setNom(nom);
+                  alumne.setCognom1(c1);
+                  alumne.setCognom2(c2);
+                  //alumne.setDni(dni);
+                  alumneDAO.updateAlumne(alumne);
+                }
+            }catch(PersistenceException e){
+                 e.printStackTrace();       
+            }
+     }
+        
+        
 }

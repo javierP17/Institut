@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AlumneMySQLDAO implements AlumneDAO {
+    private Connection conn;
      @Override
     public void saveAlumne(Alumne alumne) throws PersistenceException{
-        try(Connection conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/Institut", "root", "maletin");
-        CallableStatement insert = conn.prepareCall("CALL insertAlumne(?, ?, ?, ?)");){
+        prepareConnection();
+        try{
+        CallableStatement insert = conn.prepareCall("CALL insertAlumne(?, ?, ?, ?)");
         String nom = alumne.getNom();
         String c1 = alumne.getCognom1();
         String c2 = alumne.getCognom2();
@@ -32,8 +34,9 @@ public class AlumneMySQLDAO implements AlumneDAO {
     }
     @Override
     public void saveModul(Modul modul) throws PersistenceException{
-        try(Connection conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/Institut", "root", "maletin");
-        CallableStatement insert = conn.prepareCall("CALL insertModul(?, ?, ?)");){
+        prepareConnection();
+        try{
+        CallableStatement insert = conn.prepareCall("CALL insertModul(?, ?, ?)");
         String nom = modul.getNom();
         String desc = modul.getDescripcio();
         String durada = modul.getDurada();
@@ -47,11 +50,30 @@ public class AlumneMySQLDAO implements AlumneDAO {
             throw new PersistenceException(e.getErrorCode());
         }
     }
+    
+    @Override
+    public void saveCursa(int idAlumne, int idModul) throws PersistenceException {
+	prepareConnection();
+	CallableStatement insert;
+	try {
+		insert = conn.prepareCall("CALL insertCursa(?, ?)");
+		int idA = idAlumne;
+		int idM = idModul;
+
+		insert.setInt(1, idA);
+		insert.setInt(2, idM);
+
+		insert.executeUpdate();
+	} catch (SQLException e) {
+		throw new PersistenceException(e.getErrorCode());
+	}
+    }   
     @Override
     public List<Alumne> getAlumnes() throws PersistenceException{
         List<Alumne> alumnes = new ArrayList<>();
-        try(Connection conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/Institut", "root", "maletin");
-            CallableStatement sql = conn.prepareCall("CALL getAlumnes()");){
+        prepareConnection();
+        try{  
+            CallableStatement sql = conn.prepareCall("CALL getAlumnes()");
             ResultSet reader = sql.executeQuery();    
             while(reader.next()){
                 alumnes.add(JDBCUtils.getAlumne(reader));
@@ -64,8 +86,9 @@ public class AlumneMySQLDAO implements AlumneDAO {
     @Override
     public List<Modul> getModuls() throws PersistenceException{
         List<Modul> moduls = new ArrayList<>();
-        try(Connection conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/Institut", "root", "maletin");
-            CallableStatement sql = conn.prepareCall("CALL getModuls()");){
+            prepareConnection();
+            try{
+            CallableStatement sql = conn.prepareCall("CALL getModuls()");
             ResultSet reader = sql.executeQuery();    
             while(reader.next()){
             moduls.add(JDBCUtils.getModul(reader));
@@ -74,6 +97,57 @@ public class AlumneMySQLDAO implements AlumneDAO {
             throw new PersistenceException(e.getErrorCode());
         } 
         return moduls; 
+    }
+    
+    @Override
+    public List<Modul> getCursa(int idA) throws PersistenceException {
+	prepareConnection();
+	CallableStatement sql;
+	List<Modul> modulsCursats = new ArrayList<>();
+	try {
+		sql = conn.prepareCall("CALL getCursa(?)");
+		int idAlumne = idA;
+		sql.setInt(1, idAlumne);
+		ResultSet reader = sql.executeQuery();
+		while (reader.next()) {
+                    modulsCursats.add(JDBCUtils.getModul(reader));
+		}
+		} catch (SQLException e) {
+                    throw new PersistenceException(e.getErrorCode());
+		}
+		return modulsCursats;
+	}
+    
+    @Override
+    public void updateAlumne(Alumne alumne) throws PersistenceException{
+        prepareConnection();
+        try{
+        CallableStatement actualiza = conn.prepareCall("CALL updateAlumnes(?, ?, ?, ?)");
+        String nom = alumne.getNom();
+        String c1 = alumne.getCognom1();
+        String c2= alumne.getCognom2();
+        //String dni = alumne.getDni();
+        int id = alumne.getId();
+        
+        actualiza.setString(1,nom);
+        actualiza.setString(2,c1);
+        actualiza.setString(3,c2);
+        //actualiza.setString(4,dni); 
+        actualiza.setInt(4,id);
+    
+        actualiza.executeUpdate();
+        } catch (SQLException e){
+            throw new PersistenceException(e.getErrorCode());
+        } 
+    }
+    
+    
+    public void prepareConnection() throws PersistenceException {
+	try {
+		conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/Institut", "root", "maletin");
+	} catch (SQLException e) {
+		throw new PersistenceException(e.getErrorCode());
+	}
     }
 }
 
