@@ -24,7 +24,7 @@ public class AlumnatApplication {
         Scanner inici = new Scanner(System.in);
         do{
             //System.out.println("\nEscull una opció:\n1.Edat-Nom-Dni\n2.dni\n3.Edat-Nom\n4.Dni-Edat\n5.Nom-Dni\n6.Pt8a\n7.FitxersEscriptura\n8.FitxersLectura\n9.EscripturaOutput\n10.LecturaInput\n11.Surt\n");
-            System.out.println("\n1.Afegeix un alumne\n2.Mostra alumnes\n3.Afegeix un módul\n4.Mostra els móduls\n5.Assignar un alumne a un mòdul\n6.Mostra els mòduls d'un usuari\n7.Edita un alumne\n11.Surt\n");
+            System.out.println("\n1.Afegeix un alumne\n2.Mostra alumnes\n3.Afegeix un módul\n4.Mostra els móduls\n5.Assignar un alumne a un mòdul\n6.Mostra els mòduls d'un usuari\n7.Edita un alumne\n8.Esborra un alumne\n9.Esborra un mòdul\n11.Surt\n");
             opc = inici.nextInt();
             switch (opc){
                 case 1:
@@ -45,9 +45,16 @@ public class AlumnatApplication {
                     break;
                 case 7: updateAlumne();
                     break;
+                case 8: deleteAlumne();
+                    break;
+                case 9: deleteModul();
+                    break;
             } 
           }while(opc!=11);
     }
+        /**
+	* This method stores students on the database
+	*/
         private static void saveAlumne() throws PersistenceException{
          String nom;
          String c1;
@@ -68,6 +75,9 @@ public class AlumnatApplication {
          AlumneDAO alumneDAO = new AlumneMySQLDAO();
          alumneDAO.saveAlumne(a1);
          }
+      	/**
+	* This method stores moduls on the database
+	*/
         private static void saveModul() throws PersistenceException{
          String nom;
          String desc;
@@ -86,6 +96,9 @@ public class AlumnatApplication {
          modulDAO.saveModul(m1);
          }
         
+        /**
+	* This method assign alumnes to the modules on the database
+	*/
         private static void saveCursa() throws PersistenceException {
             int idAlumne;
             int idModul;
@@ -100,6 +113,10 @@ public class AlumnatApplication {
             alumneDAO.saveCursa(idAlumne, idModul);
             //pregunta.close();
 	}
+        
+        /**
+	 * This method get students from the database
+	 */
          private static void getAlumne() throws PersistenceException{
            AlumneDAO alumneDAO = new AlumneMySQLDAO();
            try {
@@ -107,14 +124,15 @@ public class AlumnatApplication {
                 for(Alumne alumne : alumnes){
                   System.out.println(alumne.toString());
                 }
-                /*for(int i=0; i<alumnes.size();i++){
-                   System.out.println(alumnes.get(i));
-                }*/
             
             }catch(PersistenceException e){
                  e.printStackTrace();       
             }
          }
+         
+         /**
+	 * This method get moduls from the database
+	 */
          private static void getModul() throws PersistenceException{
            AlumneDAO modulDAO = new AlumneMySQLDAO();
            try {
@@ -122,9 +140,6 @@ public class AlumnatApplication {
                 for(Modul modul : moduls){
                   System.out.println(modul.toString());
                 }
-                /*for(int i=0; i<moduls.size();i++){
-                   System.out.println(moduls.get(i));
-                }*/
             
             }catch(PersistenceException e){
                  e.printStackTrace();       
@@ -153,7 +168,9 @@ public class AlumnatApplication {
             }
 	}
         
-        
+         /**
+	 * This method update alumnes from the database
+	 */
             private static void updateAlumne() throws PersistenceException{
             Scanner pregunta = new Scanner(System.in);
             String nom;
@@ -192,7 +209,30 @@ public class AlumnatApplication {
             }catch(PersistenceException e){
                  e.printStackTrace();       
             }
-     }
+        }
         
-        
+        /**
+	* This method delete alumnes from the database
+	*/
+        private static void deleteAlumne() throws PersistenceException {
+            int idAlumne;
+            Scanner pregunta = new Scanner(System.in);
+            getAlumne();
+            System.out.printf("\nDigues el id del Alumne que vols esborrar: ");
+            idAlumne = pregunta.nextInt();
+            AlumneDAO alumneDAO = new AlumneMySQLDAO();
+            alumneDAO.deleteAlumne(idAlumne);
+	}
+         /**
+	* This method delete moduls from the database
+	*/
+        private static void deleteModul() throws PersistenceException {
+            int idModul;
+            Scanner pregunta = new Scanner(System.in);
+            getModul();
+            System.out.printf("\nDigues el id del mòdul que vols esborrar: ");
+            idModul = pregunta.nextInt();
+            AlumneDAO modulDAO = new AlumneMySQLDAO();
+            modulDAO.deleteModul(idModul);
+	}
 }

@@ -141,7 +141,36 @@ public class AlumneMySQLDAO implements AlumneDAO {
         } 
     }
     
-    
+    @Override
+    public void deleteAlumne(int idAlumne) throws PersistenceException {
+	prepareConnection();
+	CallableStatement delete;
+	try {
+		delete = conn.prepareCall("CALL deleteAlumne(?)");
+		int idA = idAlumne;
+
+		delete.setInt(1, idA);
+
+		delete.executeUpdate();
+	} catch (SQLException e) {
+		throw new PersistenceException(e.getErrorCode());
+	}
+    }   
+    @Override
+    public void deleteModul(int idModul) throws PersistenceException {
+	prepareConnection();
+	CallableStatement delete;
+	try {
+		delete = conn.prepareCall("CALL deleteModul(?)");
+		int idM = idModul;
+
+		delete.setInt(1, idM);
+
+		delete.executeUpdate();
+	} catch (SQLException e) {
+		throw new PersistenceException(e.getErrorCode());
+	}
+    } 
     public void prepareConnection() throws PersistenceException {
 	try {
 		conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/Institut", "root", "maletin");
