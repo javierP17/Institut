@@ -200,8 +200,8 @@ public class Alumne extends Entity implements Serializable{
        //<editor-fold defaultstate="collapsed" desc="Sobreescriptura">
            @Override
             public String toString() {
-            return String.format("Identificador: %d - Nom: %s - Cognom1: %s - Cognom2: %s - DNI: %s\n"
-            , getId(),getNom(),getCognom1(), getCognom2(),getDni());
+            return String.format("Alumne(%d)\nIdentificador: %d - Nom: %s - Cognom1: %s - Cognom2: %s - DNI: %s\n"
+            , getId(),getId(),getNom(),getCognom1(), getCognom2(),getDni());
             }
          //</editor-fold>
 

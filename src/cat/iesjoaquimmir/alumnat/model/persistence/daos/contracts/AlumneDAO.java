@@ -21,8 +21,12 @@ public interface AlumneDAO {
        public abstract List<Modul> getModuls()throws PersistenceException;
     //Modificar alumnes
        public abstract void updateAlumne(Alumne alumne) throws PersistenceException;
+    //Modificar Mòduls
+       public abstract void updateModul(Modul modul) throws PersistenceException;
     //esborrar alumnes
        public abstract void deleteAlumne(int idAlumne) throws PersistenceException;
     //esborrar moduls
        public abstract void deleteModul(int idModul) throws PersistenceException;
+    //Desmatricular alumne de un módul
+       public abstract void deleteCursa(int idAlumne, int idModul) throws PersistenceException;
 }

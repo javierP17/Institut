@@ -58,8 +58,8 @@ public class Modul extends Entity {
     //<editor-fold defaultstate="collapsed" desc="mètodes d'objecte">
        @Override
             public String toString() {
-            return String.format("Identificador: %d - Nom: %s - Descripció: %s - hores: %s\n"
-            , getId(),getNom(), getDescripcio(),getDurada());
+            return String.format("Modul(%d)\nIdentificador: %d - Nom: %s - Descripció: %s - hores: %s\n"
+            , getId(),getId(),getNom(), getDescripcio(),getDurada());
             }
     //</editor-fold>
         

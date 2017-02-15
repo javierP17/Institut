@@ -12,7 +12,8 @@ import java.util.List;
 
 public class AlumneMySQLDAO implements AlumneDAO {
     private Connection conn;
-     @Override
+    
+    @Override
     public void saveAlumne(Alumne alumne) throws PersistenceException{
         prepareConnection();
         try{
@@ -32,6 +33,7 @@ public class AlumneMySQLDAO implements AlumneDAO {
             throw new PersistenceException(e.getErrorCode());
         }
     }
+    
     @Override
     public void saveModul(Modul modul) throws PersistenceException{
         prepareConnection();
@@ -68,6 +70,7 @@ public class AlumneMySQLDAO implements AlumneDAO {
 		throw new PersistenceException(e.getErrorCode());
 	}
     }   
+    
     @Override
     public List<Alumne> getAlumnes() throws PersistenceException{
         List<Alumne> alumnes = new ArrayList<>();
@@ -83,6 +86,7 @@ public class AlumneMySQLDAO implements AlumneDAO {
         } 
         return alumnes; 
     }
+    
     @Override
     public List<Modul> getModuls() throws PersistenceException{
         List<Modul> moduls = new ArrayList<>();
@@ -142,6 +146,27 @@ public class AlumneMySQLDAO implements AlumneDAO {
     }
     
     @Override
+    public void updateModul(Modul modul) throws PersistenceException{
+        prepareConnection();
+        try{
+        CallableStatement actualiza = conn.prepareCall("CALL updateModuls(?, ?, ?, ?)");
+        String nom = modul.getNom();
+        String desc = modul.getDescripcio();
+        String h = modul.getDurada();
+        int id = modul.getId();
+        
+        actualiza.setString(1,nom);
+        actualiza.setString(2,desc);
+        actualiza.setString(3,h);
+        actualiza.setInt(4,id);
+    
+        actualiza.executeUpdate();
+        } catch (SQLException e){
+            throw new PersistenceException(e.getErrorCode());
+        } 
+    }
+    
+    @Override
     public void deleteAlumne(int idAlumne) throws PersistenceException {
 	prepareConnection();
 	CallableStatement delete;
@@ -155,7 +180,8 @@ public class AlumneMySQLDAO implements AlumneDAO {
 	} catch (SQLException e) {
 		throw new PersistenceException(e.getErrorCode());
 	}
-    }   
+    }  
+    
     @Override
     public void deleteModul(int idModul) throws PersistenceException {
 	prepareConnection();
@@ -171,6 +197,25 @@ public class AlumneMySQLDAO implements AlumneDAO {
 		throw new PersistenceException(e.getErrorCode());
 	}
     } 
+    
+    @Override
+    public void deleteCursa(int idAlumne, int idModul) throws PersistenceException {
+	prepareConnection();
+	CallableStatement delete;
+	try {
+		delete = conn.prepareCall("CALL deleteCursa(?, ?)");
+		int idA = idAlumne;
+		int idM = idModul;
+
+		delete.setInt(1, idA);
+		delete.setInt(2, idM);
+
+		delete.executeUpdate();
+	} catch (SQLException e) {
+		throw new PersistenceException(e.getErrorCode());
+	}
+    } 
+    
     public void prepareConnection() throws PersistenceException {
 	try {
 		conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/Institut", "root", "maletin");
